@@ -32,6 +32,7 @@ case $cmd in
     echo i tried so hard and got so far
     echo and in the end
     echo it didnt even matter
+    exit 1
     ;;
   succeed)
     echo we did it
