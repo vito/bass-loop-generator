@@ -6,7 +6,7 @@ cmd="${1:-commands}"
 # array of done (SUCCEEDED) commands
 done=($DONE)
 
-env
+env >&2
 
 case $cmd in
   commands)
