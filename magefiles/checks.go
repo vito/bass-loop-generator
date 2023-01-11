@@ -1,18 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 )
-
-type CheckState struct {
-	Done []string `json:"done"`
-}
-
-func (s *CheckState) IsDone(name string) bool {
-	return contains(s.Done, name)
-}
 
 func Checks() error {
 	// these checks have no requirements, so just always print them and trust the
@@ -20,14 +12,12 @@ func Checks() error {
 	fmt.Println("test")
 	fmt.Println("lint")
 
-	// NB: it might be better to just parse this from env vars or something
-	// instead
-	var state CheckState
-	if err := json.NewDecoder(os.Stdin).Decode(&state); err != nil {
-		return err
+	var doneChecks CheckSet
+	if done := os.Getenv("DONE"); done != "" {
+		doneChecks = strings.Fields(done)
 	}
 
-	if state.IsDone("test") && state.IsDone("lint") {
+	if doneChecks.Contains("test") && doneChecks.Contains("lint") {
 		// only run integration if test and lint are done
 		fmt.Println("integration")
 	}
@@ -35,8 +25,10 @@ func Checks() error {
 	return nil
 }
 
-func contains[T comparable](xs []T, y T) bool {
-	for _, x := range xs {
+type CheckSet []string
+
+func (checks CheckSet) Contains(y string) bool {
+	for _, x := range checks {
 		if x == y {
 			return true
 		}
