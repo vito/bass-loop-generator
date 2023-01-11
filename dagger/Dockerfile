@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ruby
 
 # will copy the root of the repo, not dagger/
 WORKDIR /src

@@ -1,45 +1,44 @@
-#!/usr/bin/env bash
+#!/usr/bin/env ruby
+
+require "set"
 
 # command to run
-cmd="${1:-commands}"
+cmd = ARGV[0] || "commands"
 
 # array of done (SUCCEEDED) commands
-done=($DONE)
+done = (ENV["DONE"] || "").split.to_set
 
-env >&2
+case cmd
+when "commands"
+  puts "test"
+  puts "fanout-1a"
+  puts "fanout-1b"
+  if done.include?("fanout-1a") && done.include?("fanout-1b")
+    puts "fan-in"
+  end
+  if done.include?("fan-in")
+    puts "fail"
+    puts "succeed"
+  end
 
-case $cmd in
-  commands)
-    echo test
-    echo fanout-1a
-    echo fanout-1b
-    if [[ " ${done[*]} " =~ " fanout-1a " ]] && [[ " ${done[*]} " =~ " fanout-1b " ]]; then
-      echo fan-in
-    fi
-    if [[ " ${done[*]} " =~ " fan-in " ]]; then
-      echo fail
-      echo succeed
-    fi
-    ;;
-  test)
-    echo im totally running tests bro
-    ;;
-  fanout-1a)
-    echo this is only the beginning
-    ;;
-  fanout-1b)
-    echo this too
-    ;;
-  fan-in)
-    echo ok now its over
-    ;;
-  fail)
-    echo i tried so hard and got so far
-    echo and in the end
-    echo it didnt even matter
-    exit 1
-    ;;
-  succeed)
-    echo we did it
-    ;;
-esac
+when "test"
+  puts "im totally running tests bro"
+
+when "fanout-1a"
+  puts "this is only the beginning"
+
+when "fanout-1b"
+  puts "this too"
+
+when "fan-in"
+  puts "ok now its over"
+
+when "fail"
+  puts "i tried so hard and got so far"
+  puts "and in the end"
+  puts "it didnt even matter"
+  exit 1
+
+when "succeed"
+  puts "we did it"
+end
