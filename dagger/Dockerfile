@@ -11,3 +11,6 @@ RUN go mod download
 # mage test
 RUN go install github.com/magefile/mage
 ENTRYPOINT ["mage"]
+
+# default to the target that lists the checks to run
+CMD ["checks"]
