@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+cmd="${1:-commands}" # command to run
+done=($DONE) # array of done (SUCCEEDED) commands
+
+case $cmd in
+  commands)
+    echo test
+    echo fanout-1a
+    echo fanout-1b
+    if [[ " ${done[*]} " =~ " fanout-1a " ]] && [[ " ${done[*]} " =~ " fanout-1b " ]]; then
+      echo fan-in
+    fi
+    if [[ " ${done[*]} " =~ " fan-in " ]]; then
+      echo fail
+      echo succeed
+    fi
+    ;;
+  test)
+    echo im totally running tests bro
+    ;;
+  fanout-1a)
+    echo this is only the beginning
+    ;;
+  fanout-1b)
+    echo this too
+    ;;
+  fan-in)
+    echo ok now its over
+    ;;
+  fail)
+    echo i tried so hard and got so far
+    echo and in the end
+    echo it didnt even matter
+    ;;
+  succeed)
+    echo we did it
+    ;;
+esac
