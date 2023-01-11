@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 
-cmd="${1:-commands}" # command to run
-done=($DONE) # array of done (SUCCEEDED) commands
+# command to run
+cmd="${1:-commands}"
+
+# array of done (SUCCEEDED) commands
+done=($DONE)
+
+env
 
 case $cmd in
   commands)
