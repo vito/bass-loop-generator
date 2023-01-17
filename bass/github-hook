@@ -5,12 +5,13 @@
      (git:github/vito/bass-loop/ref/main/bass/github.bass))
 
 (defn build [src version os arch]
-  (subpath
-    (from (linux/golang)
-      (cd src
-        (-> ($ go build ./cmd/booklit)
-            (with-env {:GOOS os :GOARCH arch}))))
-    ./booklit))
+  (let [filename (case os "windows" ./booklit.exe _ ./booklit)]
+    (subpath
+      (from (linux/golang)
+        (cd src
+          (-> ($ go build ./cmd/booklit)
+              (with-env {:GOOS os :GOARCH arch}))))
+      filename)))
 
 (defn tests [src]
   (from (linux/golang)
