@@ -5,10 +5,12 @@
      (git:github/vito/bass-loop/ref/main/bass/github.bass))
 
 (defn build [src version os arch]
-  (from (linux/golang)
-    (cd src
-      (-> ($ go build ./cmd/booklit)
-          (with-env {:GOOS os :GOARCH arch})))))
+  (subpath
+    (from (linux/golang)
+      (cd src
+        (-> ($ go build ./cmd/booklit)
+            (with-env {:GOOS os :GOARCH arch}))))
+    ./booklit))
 
 (defn tests [src]
   (from (linux/golang)
@@ -17,9 +19,11 @@
       ($ ginkgo -r -p))))
 
 (defn docs [src]
-  (from (linux/golang)
-    (cd src
-      ($ ./scripts/build-docs))))
+  (subpath
+    (from (linux/golang)
+      (cd src
+        ($ ./scripts/build-docs)))
+    ./docs/))
 
 (defn ls paths
   (from (linux/alpine)
