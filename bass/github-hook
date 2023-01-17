@@ -36,7 +36,7 @@
 ; standard suite of validations for the repo
 (defn checks [src]
   {:build-linux (ls (build stub-src "dev" "linux" "amd64"))
-   :build-darwin (ls (build stub-src "dev" "darwin" "amd64"
+   :build-darwin (ls (build stub-src "dev" "darwin" "amd64")
                      (build stub-src "dev" "darwin" "arm64"))
    :build-windows (ls (build stub-src "dev" "windows" "amd64"))
    :docs (ls (docs stub-src))
