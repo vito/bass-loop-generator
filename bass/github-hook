@@ -35,7 +35,6 @@
 
 ; standard suite of validations for the repo
 (defn checks [src]
-  (def stub-src git:github/vito/booklit/ref/master/)
   {:build-linux (ls (build stub-src "dev" "linux" "amd64"))
    :build-darwin (ls (build stub-src "dev" "darwin" "amd64"
                      (build stub-src "dev" "darwin" "arm64"))
@@ -44,7 +43,10 @@
    :test (tests stub-src)
    :nix (nix-checks stub-src)})
 
+(defn stub-checkout [url ref]
+  git:github/vito/booklit/ref/master/)
+
 ; called by bass-loop
 (defn main []
   (for [event *stdin*]
-    (github:check-hook event git:checkout checks)))
+    (github:check-hook event stub-checkuout checks)))
