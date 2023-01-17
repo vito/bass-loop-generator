@@ -35,13 +35,13 @@
 
 ; standard suite of validations for the repo
 (defn checks [src]
-  {:build-linux (ls (build stub-src "dev" "linux" "amd64"))
-   :build-darwin (ls (build stub-src "dev" "darwin" "amd64")
-                     (build stub-src "dev" "darwin" "arm64"))
-   :build-windows (ls (build stub-src "dev" "windows" "amd64"))
-   :docs (ls (docs stub-src))
-   :test (tests stub-src)
-   :nix (nix-checks stub-src)})
+  {:build-linux (ls (build src "dev" "linux" "amd64"))
+   :build-darwin (ls (build src "dev" "darwin" "amd64")
+                     (build src "dev" "darwin" "arm64"))
+   :build-windows (ls (build src "dev" "windows" "amd64"))
+   :docs (ls (docs src))
+   :test (tests src)
+   :nix (nix-checks src)})
 
 (defn stub-checkout [url ref]
   git:github/vito/booklit/ref/master/)
