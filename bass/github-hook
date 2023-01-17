@@ -49,4 +49,4 @@
 ; called by bass-loop
 (defn main []
   (for [event *stdin*]
-    (github:check-hook event stub-checkuout checks)))
+    (github:check-hook event stub-checkout checks)))
