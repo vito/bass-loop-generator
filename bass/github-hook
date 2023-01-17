@@ -1,0 +1,52 @@
+#!/usr/bin/env bass
+
+; load dependencies
+(use (.git (linux/alpine/git))
+     (git:github/vito/bass-loop/ref/main/bass/github.bass))
+
+(defn build [src version os arch]
+  (from (linux/golang)
+    (cd src
+      (-> ($ go build ./cmd/booklit)
+          (with-env {:GOOS os :GOARCH arch})))))
+
+(defn tests [src]
+  (from (linux/golang)
+    (cd src
+      ($ go install -mod=mod "github.com/onsi/ginkgo/v2/ginkgo")
+      ($ ginkgo -r -p))))
+
+(defn docs [src]
+  (from (linux/golang)
+    (cd src
+      ($ ./scripts/build-docs))))
+
+(defn ls paths
+  (from (linux/alpine)
+    ($ ls & $paths)))
+
+(defn nix-checks [src]
+  (from (linux/ubuntu)
+    ($ apt -y update)
+    ($ apt -y install spell)
+    ($ echo "Spewing a bunch of output...")
+    ($ grep dag /usr/share/dict/words)
+    ($ sh -c "echo nix not installed; exit 1")))
+
+; standard suite of validations for the repo
+(defn checks [src]
+  {:build-linux (ls (build src "dev" "linux" "amd64"))
+   :build-darwin (ls (build src "dev" "darwin" "amd64")
+                     (build src "dev" "darwin" "arm64"))
+   :build-windows (ls (build src "dev" "windows" "amd64"))
+   :docs (ls (docs src))
+   :test (tests src)
+   :nix (nix-checks src)})
+
+(defn stub-checkout [url ref]
+  git:github/vito/booklit/ref/master/)
+
+; called by bass-loop
+(defn main []
+  (for [event *stdin*]
+    (github:check-hook event stub-checkout checks)))
